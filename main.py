@@ -3,7 +3,8 @@ import sys
 from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
 from PyQt6.QtCore import QThreadPool
 
-from mio_app import Ui_MainWindow
+import utils
+from mio_app_new import Ui_MainWindow
 from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
 from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
 
@@ -12,6 +13,8 @@ from Mio_API_v02 import Mio_API
 import json
 
 from constants import *
+
+all_serial_ports = utils.get_serial_ports()
 
 
 class MainWindow(QMainWindow):
@@ -23,8 +26,8 @@ class MainWindow(QMainWindow):
         self.mouse_config_dialog = MouseConfigDialog(self)
         self.keyboard_config_dialog = KeyboardConfigDialog(self)
 
+        self.ui.UsbDeviceComportComboBox.addItems(all_serial_ports)
         self.full_config = self.load_current_config(PATH_TO_DEFAULT_CONFIG)
-        self._working_with_arm = -1
 
         self.ui.LeftBandEnabled.toggled.connect(self.on_left_band_toggled)
         self.ui.LeftBandModeComboBox.currentIndexChanged.connect(self.on_band_mode_changed)
@@ -34,10 +37,17 @@ class MainWindow(QMainWindow):
         self.ui.RightBandModeComboBox.currentIndexChanged.connect(self.on_band_mode_changed)
         self.ui.RightBandConfigButton.clicked.connect(self.on_right_band_config_btn_clicked)
 
-        self.worker = Mio_API()
+        self.ui.LeftBandStatusGood.setVisible(False)
+        self.ui.RightBandStatusGood.setVisible(False)
+        self.ui.UsbDeviceStatusGood.setVisible(False)
+        self.ui.UsbDeviceComportComboBox.currentIndexChanged.connect(self.on_comport_changed)
+
+        self._working_with_arm = -1
+
+        self.backend_api = Mio_API()
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.threadpool.start(self.worker)
+        self.threadpool.start(self.backend_api)
 
     def on_left_band_toggled(self):
         if self.ui.LeftBandEnabled.isChecked():
@@ -141,6 +151,13 @@ class MainWindow(QMainWindow):
         self.save_current_config()
         self.send_config_to_process()
 
+    def on_comport_changed(self):
+        serial_port = all_serial_ports[self.ui.UsbDeviceComportComboBox.currentIndex()]
+        print(f'Comport was changed to {serial_port}')
+        self.full_config['usb_device']['serial_port'] = serial_port
+        self.save_current_config()
+        self.send_config_to_process()
+
     def save_current_config(self):
         with open(PATH_TO_DEFAULT_CONFIG, 'w') as fp:
             json.dump(self.full_config, fp, indent=2)
@@ -169,13 +186,14 @@ class MainWindow(QMainWindow):
                     self.ui.RightBandModeComboBox.setCurrentIndex(1)
                 elif armband['mode'] == 'mouse':
                     self.ui.RightBandModeComboBox.setCurrentIndex(0)
+        self.ui.UsbDeviceComportComboBox.setCurrentIndex(all_serial_ports.index(config['usb_device']['serial_port']))
         return config
 
     def send_config_to_process(self):
-        self.worker.config_changed = True
+        self.backend_api.config_changed = True
 
     def closeEvent(self, *args, **kwargs):
-        self.worker.stop_requested = True
+        self.backend_api.stop_requested = True
 
 
 class MouseConfigDialog(QDialog):

@@ -39,5 +39,9 @@
         "gesture_2": "left_click"
       }
     }
-  ]
+  ],
+  "usb_device": {
+    "mode": "app",
+    "serial_port": "COM5"
+  }
 }
