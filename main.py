@@ -9,6 +9,7 @@ from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
 from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
 
 from Mio_API_v02 import Mio_API
+from Mio_API_v04 import Mio_API_get_data, Mio_API_control
 
 import json
 
@@ -43,11 +44,11 @@ class MainWindow(QMainWindow):
         self.ui.UsbDeviceComportComboBox.currentIndexChanged.connect(self.on_comport_changed)
 
         self._working_with_arm = -1
-
-        self.backend_api = Mio_API()
+        self.backend_api = Mio_API_control()
+        self.worker_get_data = Mio_API_get_data(self.backend_api)
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.threadpool.start(self.backend_api)
+        self.threadpool.start(self.worker_get_data)n
 
     def on_left_band_toggled(self):
         if self.ui.LeftBandEnabled.isChecked():
