@@ -25,15 +25,18 @@ class Mio_API_control(Thread):
         self.pre_button_states = {'left_click': False, 'right_click': False}
         self.json_data_with_config = dict()
         self.my_json_config = dict()
+        self.stop_requested = False
 
+    # @pyqtSlot()
     def run(self):
-        while True:
+        while not self.stop_requested:
             for band_id in self.my_json_config:
                 self.controller_band_with_config(band_id)
 
             self.mouse.move(self.x_speed, self.y_speed)
             # self.button_check(self.s, 'left_click')
             time.sleep(self.duration)
+        sys.exit()#?
 
     # def button_check(self, s, button_name):
     #     if s:
@@ -99,7 +102,7 @@ class Mio_API_control(Thread):
 
 
 class Mio_API_get_data(QRunnable):
-    def __init__(self, band_control):
+    def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
         self.config_changed = False
         self.stop_requested = False
@@ -123,16 +126,18 @@ class Mio_API_get_data(QRunnable):
     def run(self):
         self.open_serial()
         # self.test_data()
+        sys.exit()
 
     def open_serial(self):
-        while True:
+        while not self.stop_requested:
             try:
                 self.check_config()
+                print('check conf')
                 print('Trying to open port')
                 self.ser.open()
                 line = self.ser.readline()
                 print(f'Data: {line}')
-                while True:
+                while not self.stop_requested:
                     self.check_config()
                     line = self.ser.readline()
                     print(f'Data: {line}')
@@ -165,8 +170,6 @@ class Mio_API_get_data(QRunnable):
                 self.ser.close()
 
     def check_config(self):
-        if self.stop_requested:  # В начале каждой итерации проверка была ли отправлена команда на стоп.
-            sys.exit()  # Если была, то убиваемся
         if self.config_changed:  # Теперь проверка на то был ли изменен конфиг
             print('Config changed, obtaining config again')
             self.init_json()
@@ -195,17 +198,18 @@ class Mio_API_get_data(QRunnable):
         self.armbands = self.json_config['armbands']
         for armband in self.armbands:
             self.json_data_with_config[armband["id"]] = {'x': 0, 'y': 0, 's': 0}
-            self.set_band_json_data(self.json_data_with_config)
+            # self.set_band_json_data(self.json_data_with_config)
             self.my_json_config[armband["id"]] = armband
             # if armband["arm"] == "right":
             #     self.right_id = armband["id"]
             # elif armband["arm"] == "left":
             #     self.left_id = armband["id"]
-        self.set_band_my_json_config(self.my_json_config)
+        # self.set_band_my_json_config(self.my_json_config)
 
 
 if __name__ == '__main__':
     mio_control = Mio_API_control()
     get_data = Mio_API_get_data(mio_control)
-    get_data.start()
-    mio_control.start()
+
+    # get_data.start()
+    # mio_control.start()
