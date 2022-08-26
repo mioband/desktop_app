@@ -137,6 +137,21 @@ class Mio_API_get_data(QRunnable):
         # self.test_data()
         sys.exit()
 
+    def emit_detect(self, band_id):
+        if self.my_json_config[band_id]["arm"] == "right":
+            self.signals.band_status.emit({'band': 'right', 'status': True})
+            self.last_right_emit = time.time()
+        elif self.my_json_config[band_id]["arm"] == "left":
+            self.signals.band_status.emit({'band': 'left', 'status': True})
+            self.last_left_emit = time.time()
+
+    def emit_close(self):
+        time_now = time.time()
+        if (time_now - self.last_right_emit) > 3:
+            self.signals.band_status.emit({'band': 'right', 'status': False})
+        if (time_now - self.last_left_emit) > 3:
+            self.signals.band_status.emit({'band': 'left', 'status': False})
+
     def open_serial(self):
         while not self.stop_requested:
             try:
@@ -171,10 +186,12 @@ class Mio_API_get_data(QRunnable):
 
                         s = i_list[4]
                         band_id = str(i_list[5])
+                        self.emit_detect(band_id)
                         self.json_data_with_config[band_id] = {'x': -y, 'y': x, 's': s}
                         self.set_band_json_data(self.json_data_with_config)
                     except:
                         pass
+                    self.emit_close()
             except:
                 time.sleep(3)
                 self.ser.close()
