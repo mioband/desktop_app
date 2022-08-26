@@ -186,12 +186,12 @@ class Mio_API_get_data(QRunnable):
 
                         s = i_list[4]
                         band_id = str(i_list[5])
-                        self.emit_detect(band_id)
+                        # self.emit_detect(band_id)
                         self.json_data_with_config[band_id] = {'x': -y, 'y': x, 's': s}
                         self.set_band_json_data(self.json_data_with_config)
                     except:
                         pass
-                    self.emit_close()
+                    # self.emit_close()
             except:
                 time.sleep(3)
                 self.ser.close()
