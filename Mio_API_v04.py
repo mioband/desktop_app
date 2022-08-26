@@ -3,7 +3,7 @@ import sys
 import time
 from threading import Thread
 
-from PyQt6.QtCore import QRunnable, pyqtSlot
+from PyQt6.QtCore import QRunnable, pyqtSlot, QObject, pyqtSignal
 from pynput.mouse import Button, Controller
 import serial
 
@@ -101,6 +101,11 @@ class Mio_API_control(Thread):
                 self.rotation_by_speed(rotation_x, rotation_y)
 
 
+class MioAPISignals(QObject):
+    band_status = pyqtSignal(object)
+    usb_device_status = pyqtSignal(object)
+
+
 class Mio_API_get_data(QRunnable):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
@@ -109,6 +114,7 @@ class Mio_API_get_data(QRunnable):
         self.band_control = band_control
         self.json_data_with_config = dict()
         self.my_json_config = dict()
+        self.signals = MioAPISignals()
         self.ser = serial.Serial()
         self.ser.port = SERIAL_PORT
         self.ser.baudrate = 115200
@@ -124,6 +130,9 @@ class Mio_API_get_data(QRunnable):
 
     @pyqtSlot()
     def run(self):
+        self.signals.band_status.emit({'band': 'right', 'status': False})
+        self.signals.band_status.emit({'band': 'left', 'status': False})
+        self.signals.usb_device_status.emit(False)
         self.open_serial()
         # self.test_data()
         sys.exit()
@@ -133,8 +142,9 @@ class Mio_API_get_data(QRunnable):
             try:
                 self.check_config()
                 print('check conf')
-                print('Trying to open port')
+                print(f'Trying to open port {self.ser.port}')
                 self.ser.open()
+                self.signals.usb_device_status.emit(True)
                 line = self.ser.readline()
                 print(f'Data: {line}')
                 while not self.stop_requested:
