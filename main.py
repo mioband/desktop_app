@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         self.backend = Mio_API_get_data(self.backend_controls)
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.threadpool.start(self.backend)
+        self.threadpool.start(self.worker_get_data)
 
     def on_left_band_toggled(self):
         if self.ui.LeftBandEnabled.isChecked():
@@ -193,8 +193,8 @@ class MainWindow(QMainWindow):
         self.backend.config_changed = True
 
     def closeEvent(self, *args, **kwargs):
-        self.backend.stop_requested = True
-
+        self.backend_api.stop_requested = True
+        self.worker_get_data.stop_requested = True
 
 
 class MouseConfigDialog(QDialog):
