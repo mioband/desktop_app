@@ -27,8 +27,11 @@
       "id": "2",
       "enabled": true,
       "arm": "left",
-      "mode": "tv",
-      "bindings": null
+      "mode": "mouse",
+      "bindings": {
+        "gesture_1": "left_click",
+        "gesture_2": "left_click"
+      }
     },
     {
       "id": "3",
