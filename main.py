@@ -8,7 +8,7 @@ from mio_app import Ui_MainWindow
 from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
 from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
 
-from Mio_API_v04 import Mio_API_get_data, Mio_API_control
+from Mio_API_v05 import Mio_API_get_data, Mio_API_control
 
 import json
 
