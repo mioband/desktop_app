@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
 from PyQt6.QtCore import QThreadPool
 
 import utils
-from mio_app_new import Ui_MainWindow
+from mio_app import Ui_MainWindow
 from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
 from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
 
@@ -45,9 +45,11 @@ class MainWindow(QMainWindow):
         self._working_with_arm = -1
         self.backend_controls = Mio_API_control()
         self.backend = Mio_API_get_data(self.backend_controls)
+        self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
+        self.backend.signals.band_status.connect(self.on_band_status_changed)
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.threadpool.start(self.worker_get_data)
+        self.threadpool.start(self.backend)
 
     def on_left_band_toggled(self):
         if self.ui.LeftBandEnabled.isChecked():
@@ -148,6 +150,8 @@ class MainWindow(QMainWindow):
             elif armband['mode'] == 'hotkeys':
                 armband['bindings'] = {'tilt_forward': 'w', 'tilt_backward': 's', 'tilt_left': 'a', 'tilt_right': 'd',
                                        'gesture_1': 'left_click', 'gesture_2': 'shift'}
+            else:
+                armband['bindings'] = None
         self.save_current_config()
         self.send_config_to_process()
 
@@ -157,6 +161,36 @@ class MainWindow(QMainWindow):
         self.full_config['usb_device']['serial_port'] = serial_port
         self.save_current_config()
         self.send_config_to_process()
+
+    def on_usb_device_status_changed(self, status):
+        if status:
+            print('USB device status changed to True')
+            self.ui.UsbDeviceStatusGood.setVisible(True)
+            self.ui.UsbDeviceStatusBad.setVisible(False)
+        else:
+            print('USB device status changed to False')
+            self.ui.UsbDeviceStatusBad.setVisible(True)
+            self.ui.UsbDeviceStatusGood.setVisible(False)
+
+    def on_band_status_changed(self, status):
+        if status['band'] == 'left':
+            if status['status']:
+                print('Left band status changed to True')
+                self.ui.LeftBandStatusGood.setVisible(True)
+                self.ui.LeftBandStatusBad.setVisible(False)
+            else:
+                print('Left band status changed to False')
+                self.ui.LeftBandStatusBad.setVisible(True)
+                self.ui.LeftBandStatusGood.setVisible(False)
+        elif status['band'] == 'right':
+            if status['status']:
+                print('Right band status changed to True')
+                self.ui.RightBandStatusGood.setVisible(True)
+                self.ui.RightBandStatusBad.setVisible(False)
+            else:
+                print('Right band status changed to False')
+                self.ui.RightBandStatusBad.setVisible(True)
+                self.ui.RightBandStatusGood.setVisible(False)
 
     def save_current_config(self):
         with open(PATH_TO_DEFAULT_CONFIG, 'w') as fp:
@@ -193,8 +227,8 @@ class MainWindow(QMainWindow):
         self.backend.config_changed = True
 
     def closeEvent(self, *args, **kwargs):
-        self.backend_api.stop_requested = True
-        self.worker_get_data.stop_requested = True
+        self.backend.stop_requested = True
+        self.backend_controls.stop_requested = True
 
 
 class MouseConfigDialog(QDialog):
