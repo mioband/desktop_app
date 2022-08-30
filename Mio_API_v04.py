@@ -10,10 +10,10 @@ from pynput.keyboard import Key
 import serial
 
 from constants import SERIAL_PORT, PATH_TO_DEFAULT_CONFIG
-from win32api import GetSystemMetrics
+# from win32api import GetSystemMetrics
 
 MAX_MOUSE_SPEED = 20
-WIDTH_INCREASE = GetSystemMetrics(0) / GetSystemMetrics(1)
+WIDTH_INCREASE = 1#GetSystemMetrics(0) / GetSystemMetrics(1)
 DIFF_INCREASE = 4
 XY_LIMIT = 3
 
@@ -149,10 +149,10 @@ class MioAPISignals(QObject):
     usb_device_status = pyqtSignal(object)
 
 
-class Mio_API_get_data(QRunnable):
+class Mio_API_get_data(Thread):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
-        self.serial_port = "COM3"
+        self.serial_port = "/dev/cu.usbmodem626AEF5E12351"
         self.config_changed = False
         self.stop_requested = False
         self.band_control = band_control
@@ -164,7 +164,10 @@ class Mio_API_get_data(QRunnable):
         self.ser.baudrate = 115200
         self.ser.timeout = 2
         self.init_json()
-        self.band_control.start()  # TODO
+        self.start_time = time.time()
+        self.running_time_list = []
+        print(f'Start time:{self.start_time}')
+        # self.band_control.start()  # TODO
 
     def set_band_json_data(self, json_d):
         self.band_control.json_data_with_config = json_d
@@ -200,18 +203,27 @@ class Mio_API_get_data(QRunnable):
         while not self.stop_requested:
             try:
                 self.check_config()
-                print('check conf')
-                print(f'Trying to open port {self.ser.port}')
+                # print('check conf')
+                # print(f'Trying to open port {self.ser.port}')
                 self.ser.open()
                 self.signals.usb_device_status.emit(True)
                 line = self.ser.readline()
-                print(f'Data: {line}')
+                # print(f'Data: {line}')
                 while not self.stop_requested:
                     self.check_config()
                     line = self.ser.readline()
-                    print(f'Data: {line}')
+                    if len(line) < 10 and len(line) > 1:
+                        print(f'Power: {line.decode()}')
+                        continue
+
+                    # print(f'Data: {line}')
+
                     s_list = line.decode().split(',')[:-1]
+                    # print(s_list)
                     i_list = []
+                    # if s_list[-5] == '%':
+                    #     print(line)
+                    #     continue
                     for i in s_list:
                         try:
                             i_list.append(int(i))
@@ -234,6 +246,13 @@ class Mio_API_get_data(QRunnable):
                         self.json_data_with_config[band_id] = {'x': -y, 'y': x, 's': s}
                         self.set_band_json_data(self.json_data_with_config)
                     except:
+                        t = time.time() - self.start_time
+                        self.start_time = time.time()
+                        self.running_time_list.append(t)
+
+
+                        print(f'Running time: {t}')
+                        print(max(self.running_time_list))
                         for armband in self.armbands:
                             self.json_data_with_config[armband["id"]] = {'x': 0, 'y': 0, 's': 0}
                             self.set_band_json_data(self.json_data_with_config)
@@ -265,5 +284,5 @@ if __name__ == '__main__':
     mio_control = Mio_API_control()
     get_data = Mio_API_get_data(mio_control)
 
-    # get_data.start()
+    get_data.start()
     # mio_control.start()
