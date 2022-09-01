@@ -212,7 +212,14 @@ class Mio_API_get_data(QRunnable):
                     self.check_config()
                     line = self.ser.readline()
                     print(f'Data: {line}')
-                    s_list = line.decode().split(',')[:-1]
+                    decode_line = line.decode()
+                    if decode_line[0] == '%':
+                        power_s_list = decode_line.split(',')
+                        band_id = int(power_s_list[0][-1])
+                        power = int(power_s_list[1][:-2])
+                        print(f'Power of band number {band_id}: {power}%')
+                        continue
+                    s_list = decode_line.split(',')[:-1]
                     i_list = []
                     for i in s_list:
                         try:
