@@ -13,9 +13,10 @@ from constants import SERIAL_PORT, PATH_TO_DEFAULT_CONFIG
 from win32api import GetSystemMetrics
 
 
-MAX_MOUSE_SPEED = 20
+MAX_MOUSE_SPEED = 40
 WIDTH_INCREASE = GetSystemMetrics(0)/GetSystemMetrics(1)
-DIFF_INCREASE = 4
+HEIGHT_INCREASE = 1.5
+DIFF_INCREASE = 1
 XY_LIMIT = 3
 
 
@@ -68,16 +69,16 @@ class Mio_API_control(Thread):
             self.x_speed = 0
             self.y_speed = 0
 
-        self.x_speed *= DIFF_INCREASE * WIDTH_INCREASE
-        self.y_speed *= DIFF_INCREASE
+        self.x_speed *= abs(x) * DIFF_INCREASE * WIDTH_INCREASE
+        self.y_speed *= abs(y) * DIFF_INCREASE * HEIGHT_INCREASE
 
     def controller_band_with_config(self, band_id):
         if self.my_json_config[band_id]["enabled"]:
             msg_l0 = self.json_data_with_config[band_id]
             if self.my_json_config[band_id]["mode"] == "mouse":
                 # print(msg_l0)
-                rotation_x = msg_l0['x'] if abs(msg_l0['x']) > 1 else 0
-                rotation_y = msg_l0['y'] if abs(msg_l0['y']) > 1 else 0
+                rotation_x = msg_l0['x'] if abs(msg_l0['x']) > 2 else 0
+                rotation_y = msg_l0['y'] if abs(msg_l0['y']) > 2 else 0
                 self.rotation_by_speed(rotation_x, rotation_y)
                 if msg_l0['s'] == 1:
                     self.press_button(self.my_json_config[band_id]["bindings"]["gesture_1"],
@@ -232,7 +233,7 @@ class Mio_API_get_data(QRunnable):
                         s = i_list[4]
                         band_id = str(i_list[5])
                         self.emit_detect(band_id)
-                        self.json_data_with_config[band_id] = {'x': -y, 'y': x, 's': s}
+                        self.json_data_with_config[band_id] = {'x': y, 'y': x, 's': s}
                         self.set_band_json_data(self.json_data_with_config)
                     except:
                         for armband in self.armbands:
