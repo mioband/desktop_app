@@ -46,6 +46,6 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM3"
+    "serial_port": "/dev/cu.usbmodem6D8F376F50541"
   }
 }
