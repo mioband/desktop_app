@@ -9,7 +9,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('config.json', '.'), ('swap.png', '.')],
+    datas=[('icons', 'icons'), ('config', 'config')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
