@@ -129,8 +129,7 @@ class Mio_API_control(Thread):
             if self.pre_button_states[button]:
                 self.mouse.release(self.button_mouse_headers[button])
                 print(f'{button} released')
-
-        elif mode == "keyboard":
+        elif mode == "hotkeys":
             if self.pre_button_states[button]:
                 self.keyboard.release(self.button_keyboard_headers[button])
         self.pre_button_states[button] = False
@@ -140,7 +139,7 @@ class Mio_API_control(Thread):
             if not self.pre_button_states[button]:
                 self.mouse.press(self.button_mouse_headers[button])
                 print(f'{button} pressed')
-        elif mode == "keyboard":
+        elif mode == "hotkeys":
             if not self.pre_button_states[button]:
                 self.keyboard.press(self.button_keyboard_headers[button])
         self.pre_button_states[button] = True
@@ -152,7 +151,6 @@ class MioAPISignals(QObject):
 class Mio_API_get_data(QRunnable):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
-        self.serial_port = "COM3"
         self.config_changed = False
         self.stop_requested = False
         self.band_control = band_control
