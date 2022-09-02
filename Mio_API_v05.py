@@ -128,28 +128,28 @@ class Mio_API_control(Thread):
         if mode == "mouse":
             if self.pre_button_states[button]:
                 self.mouse.release(self.button_mouse_headers[button])
-                print(f'{button} released')
         elif mode == "hotkeys":
-            try:
-                if self.pre_button_states[button]:
-                    self.keyboard.release(self.button_keyboard_headers[button])
-            except:
+            if button in self.button_mouse_headers:
                 if self.pre_button_states[button]:
                     self.mouse.release(self.button_mouse_headers[button])
+            else:
+                if self.pre_button_states[button]:
+                    self.keyboard.release(self.button_keyboard_headers[button])
+        print(f'{button} released')
         self.pre_button_states[button] = False
 
     def press_button(self, button, mode):
         if mode == "mouse":
             if not self.pre_button_states[button]:
                 self.mouse.press(self.button_mouse_headers[button])
-                print(f'{button} pressed')
         elif mode == "hotkeys":
-            try:
-                if not self.pre_button_states[button]:
-                    self.keyboard.press(self.button_keyboard_headers[button])
-            except:
+            if button in self.button_mouse_headers:
                 if not self.pre_button_states[button]:
                     self.mouse.press(self.button_mouse_headers[button])
+            else:
+                if not self.pre_button_states[button]:
+                    self.keyboard.press(self.button_keyboard_headers[button])
+            print(f'{button} pressed')
         self.pre_button_states[button] = True
 
 class MioAPISignals(QObject):
