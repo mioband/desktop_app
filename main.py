@@ -220,7 +220,11 @@ class MainWindow(QMainWindow):
                     self.ui.RightBandModeComboBox.setCurrentIndex(1)
                 elif armband['mode'] == 'mouse':
                     self.ui.RightBandModeComboBox.setCurrentIndex(0)
-        self.ui.UsbDeviceComportComboBox.setCurrentIndex(all_serial_ports.index(config['usb_device']['serial_port']))
+        try:
+            self.ui.UsbDeviceComportComboBox.setCurrentIndex(
+                all_serial_ports.index(config['usb_device']['serial_port']))
+        except:
+            self.ui.UsbDeviceComportComboBox.setCurrentIndex(0)
         return config
 
     def send_config_to_process(self):
