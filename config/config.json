@@ -25,17 +25,14 @@
   "armbands": [
     {
       "id": "2",
-      "enabled": false,
+      "enabled": true,
       "arm": "left",
-      "mode": "mouse",
-      "bindings": {
-        "gesture_1": "left_click",
-        "gesture_2": "left_click"
-      }
+      "mode": "car",
+      "bindings": null
     },
     {
       "id": "3",
-      "enabled": true,
+      "enabled": false,
       "arm": "right",
       "mode": "mouse",
       "bindings": {
