@@ -1,4 +1,5 @@
 import sys
+import json
 
 from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
 from PyQt6.QtCore import QThreadPool
