@@ -128,30 +128,29 @@ class Mio_API_control(Thread):
         if mode == "mouse":
             if self.pre_button_states[button]:
                 self.mouse.release(self.button_mouse_headers[button])
+                print(f'{button} released')
         elif mode == "hotkeys":
-            if button in self.button_mouse_headers:
-                if self.pre_button_states[button]:
-                    self.mouse.release(self.button_mouse_headers[button])
-            else:
+            try:
                 if self.pre_button_states[button]:
                     self.keyboard.release(self.button_keyboard_headers[button])
-        print(f'{button} released')
+            except:
+                if self.pre_button_states[button]:
+                    self.mouse.release(self.button_mouse_headers[button])
         self.pre_button_states[button] = False
 
     def press_button(self, button, mode):
         if mode == "mouse":
             if not self.pre_button_states[button]:
                 self.mouse.press(self.button_mouse_headers[button])
+                print(f'{button} pressed')
         elif mode == "hotkeys":
-            if button in self.button_mouse_headers:
-                if not self.pre_button_states[button]:
-                    self.mouse.press(self.button_mouse_headers[button])
-            else:
+            try:
                 if not self.pre_button_states[button]:
                     self.keyboard.press(self.button_keyboard_headers[button])
-            print(f'{button} pressed')
+            except:
+                if not self.pre_button_states[button]:
+                    self.mouse.press(self.button_mouse_headers[button])
         self.pre_button_states[button] = True
-
 class MioAPISignals(QObject):
     band_status = pyqtSignal(object)
     usb_device_status = pyqtSignal(object)
