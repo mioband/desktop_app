@@ -25,7 +25,7 @@
   "armbands": [
     {
       "id": "2",
-      "enabled": false,
+      "enabled": true,
       "arm": "left",
       "mode": "mouse",
       "bindings": {
@@ -50,6 +50,6 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM3"
+    "serial_port": "COM4"
   }
 }

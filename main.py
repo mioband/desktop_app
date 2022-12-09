@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
         self.backend.signals.band_status.connect(self.on_band_status_changed)
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        # self.threadpool.start(self.backend)
+        self.threadpool.start(self.backend)
 
     def on_left_band_toggled(self):
         if self.ui.LeftBandEnabled.isChecked():
