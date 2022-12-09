@@ -164,6 +164,7 @@ class MioAPISignals(QObject):
 class Mio_API_get_data(QRunnable):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
+        self.decode_message = {'x': 0, 'y': 0, 's': 0}
         self.config_changed = False
         self.stop_requested = False
         self.band_control = band_control
@@ -209,6 +210,38 @@ class Mio_API_get_data(QRunnable):
         if (time_now - self.last_left_emit) > 3:
             self.signals.band_status.emit({'band': 'left', 'status': False})
 
+    def string_to_json(self, line):
+        decode_line = line.decode()
+        s_list = decode_line.split(',')[:-1]
+        i_list = []
+        for i in s_list:
+            try:
+                i_list.append(int(i))
+            except:
+                pass
+        if i_list[0] == 48 or i_list[0] == 144 or i_list[0] == 80:
+            band_n = 2
+            if i_list[0] == 48:
+                self.decode_message['x'] = i_list[1]
+                self.decode_message['y'] = i_list[2]
+            elif i_list[0] == 144:
+                print(i_list)
+                self.decode_message['s'] = 1 if i_list[1] > 3 else 0
+            elif i_list[0] == 80:
+                print(f'Заряд:{i_list[1]}%')
+        else:
+            band_n = 3
+            if i_list[0] == 49:
+                self.decode_message['x'] = i_list[1]
+                self.decode_message['y'] = i_list[2]
+            elif i_list[0] == 145:
+                print(i_list)
+                self.decode_message['s'] = 1 if i_list[1] > 3 else 0
+            elif i_list[0] == 81:
+                print(f'Заряд:{i_list[1]}%')
+
+        return self.decode_message, band_n
+
     def open_serial(self):
         while not self.stop_requested:
             try:
@@ -222,36 +255,10 @@ class Mio_API_get_data(QRunnable):
                 while not self.stop_requested:
                     self.check_config()
                     line = self.ser.readline()
-                    # print(f'Data: {line}')
-                    decode_line = line.decode()
-                    if decode_line[0] == '%':
-                        power_s_list = decode_line.split(',')
-                        band_id = int(power_s_list[0][-1])
-                        power = int(power_s_list[1][:-2])
-                        print(f'Power of band number {band_id}: {power}%')
-                        continue
-                    s_list = decode_line.split(',')[:-1]
-                    i_list = []
-                    for i in s_list:
-                        try:
-                            i_list.append(int(i))
-                        except:
-                            pass
+                    print(f'Data: {line}')
                     try:
-                        if i_list[0]:
-                            x = -i_list[1]
-                        else:
-                            x = i_list[1]
-
-                        if i_list[2]:
-                            y = -i_list[3]
-                        else:
-                            y = i_list[3]
-
-                        s = i_list[4]
-                        band_id = str(i_list[5])
-                        # self.emit_detect(band_id)
-                        self.json_data_with_config[band_id] = {'x': y, 'y': x, 's': s}
+                        json_message, band_id = self.string_to_json(line)
+                        self.json_data_with_config[band_id] = json_message
                         self.set_band_json_data(self.json_data_with_config)
                     except:
                         for armband in self.armbands:
@@ -286,6 +293,5 @@ class Mio_API_get_data(QRunnable):
 if __name__ == '__main__':
     mio_control = Mio_API_control()
     get_data = Mio_API_get_data(mio_control)
-
     # get_data.start()
     # mio_control.start()
