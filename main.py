@@ -49,6 +49,7 @@ class MainWindow(QMainWindow):
         self.ui.UsbDeviceComportComboBox.currentIndexChanged.connect(self.on_comport_changed)
 
         self._working_with_arm = -1
+
         self.backend_controls = Mio_API_control()
         self.backend = Mio_API_get_data(self.backend_controls)
         self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)

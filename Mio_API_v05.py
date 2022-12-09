@@ -15,8 +15,8 @@ from win32api import GetSystemMetrics
 MAX_MOUSE_SPEED = 40
 WIDTH_INCREASE = GetSystemMetrics(0) / GetSystemMetrics(1)
 HEIGHT_INCREASE = 1.5
-DIFF_INCREASE = 1
-XY_LIMIT = 3
+DIFF_INCREASE = 0.01
+XY_LIMIT = 300
 
 
 class Mio_API_control(Thread):
@@ -44,7 +44,7 @@ class Mio_API_control(Thread):
         while not self.stop_requested:
             for band_id in self.my_json_config:
                 self.controller_band_with_config(band_id)
-
+            # print(self.x_speed, self.y_speed)
             self.mouse.move(self.x_speed, self.y_speed)
             # self.button_check(self.s, 'left_click')
             time.sleep(self.duration)
@@ -76,8 +76,9 @@ class Mio_API_control(Thread):
             msg_l0 = self.json_data_with_config[band_id]
             if self.my_json_config[band_id]["mode"] == "mouse":
                 # print(msg_l0)
-                rotation_x = msg_l0['x'] if abs(msg_l0['x']) > 2 else 0
-                rotation_y = msg_l0['y'] if abs(msg_l0['y']) > 2 else 0
+                rotation_x = msg_l0['x'] if abs(msg_l0['x']) > 200 else 0
+                rotation_y = msg_l0['y'] if abs(msg_l0['y']) > 200 else 0
+                # print(rotation_y, rotation_x)
                 self.rotation_by_speed(rotation_x, rotation_y)
                 if msg_l0['s'] == 1:
                     self.press_button(self.my_json_config[band_id]["bindings"]["gesture_1"],
@@ -164,7 +165,8 @@ class MioAPISignals(QObject):
 class Mio_API_get_data(QRunnable):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
-        self.decode_message = {'x': 0, 'y': 0, 's': 0}
+        self.decode_message_2 = {'x': 0, 'y': 0, 's': 0}
+        self.decode_message_3 = {'x': 0, 'y': 0, 's': 0}
         self.config_changed = False
         self.stop_requested = False
         self.band_control = band_control
@@ -222,25 +224,27 @@ class Mio_API_get_data(QRunnable):
         if i_list[0] == 48 or i_list[0] == 144 or i_list[0] == 80:
             band_n = 2
             if i_list[0] == 48:
-                self.decode_message['x'] = i_list[1]
-                self.decode_message['y'] = i_list[2]
+                self.decode_message_2['y'] = i_list[1]
+                self.decode_message_2['x'] = i_list[2]
             elif i_list[0] == 144:
                 print(i_list)
-                self.decode_message['s'] = 1 if i_list[1] > 3 else 0
+                self.decode_message_2['s'] = 1 if i_list[1] > 3 else 0
             elif i_list[0] == 80:
                 print(f'Заряд:{i_list[1]}%')
         else:
             band_n = 3
             if i_list[0] == 49:
-                self.decode_message['x'] = i_list[1]
-                self.decode_message['y'] = i_list[2]
+                self.decode_message_3['y'] = i_list[1]
+                self.decode_message_3['x'] = i_list[2]
             elif i_list[0] == 145:
                 print(i_list)
-                self.decode_message['s'] = 1 if i_list[1] > 3 else 0
+                self.decode_message_3['s'] = 1 if i_list[1] > 3 else 0
             elif i_list[0] == 81:
                 print(f'Заряд:{i_list[1]}%')
 
-        return self.decode_message, band_n
+        decode_message = self.decode_message_2 if band_n == 2 else self.decode_message_3
+
+        return decode_message, band_n
 
     def open_serial(self):
         while not self.stop_requested:
@@ -258,7 +262,7 @@ class Mio_API_get_data(QRunnable):
                     print(f'Data: {line}')
                     try:
                         json_message, band_id = self.string_to_json(line)
-                        self.json_data_with_config[band_id] = json_message
+                        self.json_data_with_config[str(band_id)] = json_message
                         self.set_band_json_data(self.json_data_with_config)
                     except:
                         for armband in self.armbands:

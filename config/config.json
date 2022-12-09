@@ -27,10 +27,14 @@
       "id": "2",
       "enabled": true,
       "arm": "left",
-      "mode": "mouse",
+      "mode": "hotkeys",
       "bindings": {
-        "gesture_1": "right_click",
-        "gesture_2": "left_click"
+        "tilt_forward": "w",
+        "tilt_backward": "s",
+        "tilt_left": "a",
+        "tilt_right": "d",
+        "gesture_1": "left_click",
+        "gesture_2": "shift"
       }
     },
     {
