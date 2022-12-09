@@ -10,6 +10,12 @@
     <height>361</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="font">
    <font>
     <pointsize>10</pointsize>
@@ -18,7 +24,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Mioband 0.3</string>
+   <string>Mioband Beta</string>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -47,7 +53,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Браслет 1 (левая рука)</string>
+     <string>Левый браслет</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -173,60 +179,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="LeftBandStatusGood">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+       <widget class="QLabel" name="LeftBandStatusIndicator">
         <property name="text">
-         <string/>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400; color:#ff0000;&quot;&gt;N/A&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>tick-mark.png</normaloff>tick-mark.png</iconset>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
         </property>
-        <property name="iconSize">
-         <size>
-          <width>28</width>
-          <height>28</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="autoRepeat">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="LeftBandStatusBad">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>close.png</normaloff>close.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>28</width>
-          <height>28</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -253,7 +214,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Браслет 2 (правая рука)</string>
+     <string>Правый браслет</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -379,82 +340,20 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="RightBandStatusGood">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+       <widget class="QLabel" name="RightBandStatusIndicator">
         <property name="text">
-         <string/>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400; color:#ff0000;&quot;&gt;N/A&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>tick-mark.png</normaloff>tick-mark.png</iconset>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
         </property>
-        <property name="iconSize">
-         <size>
-          <width>28</width>
-          <height>28</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-        <property name="autoRepeat">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="RightBandStatusBad">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>close.png</normaloff>close.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>28</width>
-          <height>28</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>true</bool>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="SwapBandsButton">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>110</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>swap.png</normaloff>swap.png</iconset>
-    </property>
    </widget>
    <widget class="QGroupBox" name="UsbDeviceGroupBox">
     <property name="geometry">
@@ -499,60 +398,15 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="UsbDeviceStatusGood">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
+           <widget class="QLabel" name="UsbDeviceStatusIndicator">
             <property name="text">
-             <string/>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400; color:#ff0000;&quot;&gt;N/A&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>tick-mark.png</normaloff>tick-mark.png</iconset>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
             </property>
-            <property name="iconSize">
-             <size>
-              <width>28</width>
-              <height>28</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
-            </property>
-            <property name="autoRepeat">
-             <bool>false</bool>
-            </property>
-            <property name="default">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="UsbDeviceStatusBad">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normaloff>close.png</normaloff>close.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>28</width>
-              <height>28</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>

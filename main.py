@@ -5,7 +5,8 @@ from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
 from PyQt6.QtCore import QThreadPool
 
 import utils
-from mio_app import Ui_MainWindow
+from mio_app import Ui_MainWindow as Ui_MainWindow_old
+from mio_app_new import Ui_MainWindow
 from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
 from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
 
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow):
         self.mouse_config_dialog = MouseConfigDialog(self)
         self.keyboard_config_dialog = KeyboardConfigDialog(self)
 
+        self.ui.UsbDeviceComportComboBox.clear()
         self.ui.UsbDeviceComportComboBox.addItems(all_serial_ports)
         self.full_config = self.load_current_config(PATH_TO_DEFAULT_CONFIG)
 
@@ -38,9 +40,12 @@ class MainWindow(QMainWindow):
         self.ui.RightBandModeComboBox.currentIndexChanged.connect(self.on_band_mode_changed)
         self.ui.RightBandConfigButton.clicked.connect(self.on_right_band_config_btn_clicked)
 
-        self.ui.LeftBandStatusGood.setVisible(False)
-        self.ui.RightBandStatusGood.setVisible(False)
-        self.ui.UsbDeviceStatusGood.setVisible(False)
+        self.ui.LeftBandStatusIndicator.setStyleSheet("color: red;")
+        self.ui.LeftBandStatusIndicator.setText('N/A')
+
+        self.ui.RightBandStatusIndicator.setStyleSheet("color: red;")
+        self.ui.RightBandStatusIndicator.setText('N/A')
+
         self.ui.UsbDeviceComportComboBox.currentIndexChanged.connect(self.on_comport_changed)
 
         self._working_with_arm = -1
@@ -50,7 +55,7 @@ class MainWindow(QMainWindow):
         self.backend.signals.band_status.connect(self.on_band_status_changed)
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.threadpool.start(self.backend)
+        # self.threadpool.start(self.backend)
 
     def on_left_band_toggled(self):
         if self.ui.LeftBandEnabled.isChecked():
@@ -166,32 +171,32 @@ class MainWindow(QMainWindow):
     def on_usb_device_status_changed(self, status):
         if status:
             print('USB device status changed to True')
-            self.ui.UsbDeviceStatusGood.setVisible(True)
-            self.ui.UsbDeviceStatusBad.setVisible(False)
+            self.ui.UsbDeviceStatusIndicator.setStyleSheet("color: green;")
+            self.ui.UsbDeviceStatusIndicator.setText('OK')
         else:
             print('USB device status changed to False')
-            self.ui.UsbDeviceStatusBad.setVisible(True)
-            self.ui.UsbDeviceStatusGood.setVisible(False)
+            self.ui.UsbDeviceStatusIndicator.setStyleSheet("color: red;")
+            self.ui.UsbDeviceStatusIndicator.setText('N/A')
 
     def on_band_status_changed(self, status):
         if status['band'] == 'left':
             if status['status']:
                 print('Left band status changed to True')
-                self.ui.LeftBandStatusGood.setVisible(True)
-                self.ui.LeftBandStatusBad.setVisible(False)
+                self.ui.LeftBandStatusIndicator.setStyleSheet("color: green;")
+                self.ui.LeftBandStatusIndicator.setText('OK')
             else:
                 print('Left band status changed to False')
-                self.ui.LeftBandStatusBad.setVisible(True)
-                self.ui.LeftBandStatusGood.setVisible(False)
+                self.ui.LeftBandStatusIndicator.setStyleSheet("color: red;")
+                self.ui.LeftBandStatusIndicator.setText('N/A')
         elif status['band'] == 'right':
             if status['status']:
                 print('Right band status changed to True')
-                self.ui.RightBandStatusGood.setVisible(True)
-                self.ui.RightBandStatusBad.setVisible(False)
+                self.ui.RightBandStatusIndicator.setStyleSheet("color: green;")
+                self.ui.RightBandStatusIndicator.setText('OK')
             else:
                 print('Right band status changed to False')
-                self.ui.RightBandStatusBad.setVisible(True)
-                self.ui.RightBandStatusGood.setVisible(False)
+                self.ui.RightBandStatusIndicator.setStyleSheet("color: red;")
+                self.ui.RightBandStatusIndicator.setText('N/A')
 
     def save_current_config(self):
         with open(PATH_TO_DEFAULT_CONFIG, 'w') as fp:
