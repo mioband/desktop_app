@@ -30,11 +30,10 @@ class Mio_API_control(Thread):
         self.keyboard = Controller2()
         self.button_mouse_headers = {'left_click': Button.left, 'right_click': Button.right}
         self.button_keyboard_headers = {'w': 'w', 'a': 'a', 's': 's', 'd': 'd', 'e': 'e', 'shift': Key.shift,
-                                        'ctrl': Key.ctrl, 'space': Key.space}
+                                        'ctrl': Key.ctrl, 'space': Key.space, 'z': 'z', 'x': 'x', 'c': 'c'}
         self.pre_button_states = {'w': False, 'a': False, 's': False, 'd': False, 'e': False, 'shift': False,
-                                  'ctrl': False, 'space': False, 'left_click': False, 'right_click': False}
-        self.pre_button_states = {'w': False, 'a': False, 's': False, 'd': False, 'e': False, 'shift': False,
-                                  'ctrl': False, 'space': False, 'left_click': False, 'right_click': False}
+                                  'ctrl': False, 'space': False, 'left_click': False, 'right_click': False,
+                                  'z': False, 'x': False, 'c': False}
         self.json_data_with_config = dict()
         self.my_json_config = dict()
         self.stop_requested = False
@@ -149,11 +148,12 @@ class Mio_API_control(Thread):
             try:
                 if not self.pre_button_states[button]:
                     self.keyboard.press(self.button_keyboard_headers[button])
-                print(f'{button} pressed')
+                    print(f'{button} pressed')
+
             except:
                 if not self.pre_button_states[button]:
                     self.mouse.press(self.button_mouse_headers[button])
-                print(f'{button} pressed')
+                    print(f'{button} pressed')
         self.pre_button_states[button] = True
 
 

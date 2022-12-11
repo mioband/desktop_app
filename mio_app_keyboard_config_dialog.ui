@@ -96,6 +96,21 @@
       </item>
       <item>
        <property name="text">
+        <string>Z</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>Пробел</string>
        </property>
       </item>
@@ -244,6 +259,21 @@
       </item>
       <item>
        <property name="text">
+        <string>Z</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>Пробел</string>
        </property>
       </item>
@@ -311,6 +341,21 @@
       <item>
        <property name="text">
         <string>E</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Z</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>C</string>
        </property>
       </item>
       <item>
@@ -386,6 +431,21 @@
       </item>
       <item>
        <property name="text">
+        <string>Z</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>Пробел</string>
        </property>
       </item>
@@ -453,6 +513,21 @@
       <item>
        <property name="text">
         <string>E</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Z</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>C</string>
        </property>
       </item>
       <item>

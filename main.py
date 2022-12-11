@@ -8,7 +8,7 @@ import utils
 from mio_app import Ui_MainWindow as Ui_MainWindow_old
 from mio_app_new import Ui_MainWindow
 from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
-from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
+from mio_app_keyboard_config_dialog_new import Ui_KeyboardConfigDialog
 
 from Mio_API_v05 import Mio_API_get_data, Mio_API_control
 
@@ -94,7 +94,8 @@ class MainWindow(QMainWindow):
                 'tilt_right': kcd.ui.TiltRightComboBox,
                 'gesture_1': kcd.ui.KeyboardGestureActionComboBox
             }
-            config_binding_names_in_index_order = ['w', 'a', 's', 'd', 'e', 'space', 'shift', 'left_click',
+            config_binding_names_in_index_order = ['w', 'a', 's', 'd', 'e', 'z', 'x', 'c',
+                                                   'space', 'shift', 'left_click',
                                                    'right_click', 'mousewheel_down', 'mousewheel_up']
             armband = self.full_config['armbands'][0]
             for binding in config_names_to_ui_elements.keys():
@@ -139,7 +140,8 @@ class MainWindow(QMainWindow):
                 'tilt_right': kcd.ui.TiltRightComboBox,
                 'gesture_1': kcd.ui.KeyboardGestureActionComboBox
             }
-            config_binding_names_in_index_order = ['w', 'a', 's', 'd', 'e', 'space', 'shift', 'left_click',
+            config_binding_names_in_index_order = ['w', 'a', 's', 'd', 'e', 'z', 'x', 'c',
+                                                   'space', 'shift', 'left_click',
                                                    'right_click', 'mousewheel_down', 'mousewheel_up']
             armband = self.full_config['armbands'][1]
             for binding in config_names_to_ui_elements.keys():
@@ -278,7 +280,8 @@ class KeyboardConfigDialog(QDialog):
             'tilt_right': self.ui.TiltRightComboBox,
             'gesture_1': self.ui.KeyboardGestureActionComboBox
         }
-        config_binding_names_in_index_order = ['w', 'a', 's', 'd', 'e', 'space', 'shift', 'left_click',
+        config_binding_names_in_index_order = ['w', 'a', 's', 'd', 'e', 'z', 'x', 'c',
+                                               'space', 'shift', 'left_click',
                                                'right_click', 'mousewheel_down', 'mousewheel_up']
         armband = self.parent().full_config['armbands'][self.parent()._working_with_arm]
         for config_gesture in config_names_to_ui_elements.keys():
