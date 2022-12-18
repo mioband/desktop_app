@@ -50,6 +50,6 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM3"
+    "serial_port": "COM4"
   }
 }
