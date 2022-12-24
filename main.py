@@ -13,7 +13,6 @@ from mio_app_keyboard_config_dialog_new import Ui_KeyboardConfigDialog
 from Mio_API_v05 import Mio_API_get_data, Mio_API_control
 
 import json
-
 from constants import *
 
 all_serial_ports = utils.get_serial_ports()

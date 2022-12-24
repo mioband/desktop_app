@@ -25,21 +25,21 @@
   "armbands": [
     {
       "id": "2",
-      "enabled": true,
+      "enabled": false,
       "arm": "left",
       "mode": "hotkeys",
       "bindings": {
         "tilt_forward": "w",
         "tilt_backward": "s",
-        "tilt_left": "a",
-        "tilt_right": "d",
-        "gesture_1": "right_click",
+        "tilt_left": "z",
+        "tilt_right": "x",
+        "gesture_1": "left_click",
         "gesture_2": "shift"
       }
     },
     {
       "id": "3",
-      "enabled": true,
+      "enabled": false,
       "arm": "right",
       "mode": "mouse",
       "bindings": {
@@ -50,6 +50,6 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM3"
+    "serial_port": "COM5"
   }
 }
