@@ -1,55 +1,71 @@
 {
-  "common_settings": {
-    "armband_modes": [
-      "mouse",
-      "hotkeys",
-      "tv",
-      "copter",
-      "car",
-      "dog"
-    ],
-    "available_bindings": [
-      "w",
-      "a",
-      "s",
-      "d",
-      "e",
-      "space",
-      "shift",
-      "left_click",
-      "right_click",
-      "mousewheel_up",
-      "mousewheel_down"
-    ]
-  },
-  "armbands": [
-    {
-      "id": "2",
-      "enabled": false,
-      "arm": "left",
-      "mode": "hotkeys",
-      "bindings": {
-        "tilt_forward": "w",
-        "tilt_backward": "s",
-        "tilt_left": "z",
-        "tilt_right": "x",
-        "gesture_1": "left_click",
-        "gesture_2": "shift"
-      }
-    },
-    {
-      "id": "3",
-      "enabled": false,
-      "arm": "right",
-      "mode": "mouse",
-      "bindings": {
-        "gesture_1": "left_click",
-        "gesture_2": "left_click"
-      }
-    }
+  "available_bindings": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "w",
+    "space",
+    "shift",
+    "ctrl",
+    "left_click",
+    "right_click",
+    "mousewheel_up",
+    "mousewheel_down",
+    "mousewheel_press"
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM5"
+    "serial_port": "COM6"
+  },
+  "left": {
+    "name": "Bracelet_1",
+    "id": "2",
+    "enabled": true,
+    "mode": "hotkeys",
+    "bindings": {
+      "tilt_forward": "b",
+      "tilt_backward": "a",
+      "tilt_left": "g",
+      "tilt_right": "h",
+      "gesture_1": "mousewheel_down",
+      "gesture_2": "shift"
+    }
+  },
+  "right": {
+    "name": "Bracelet_2",
+    "id": "3",
+    "enabled": true,
+    "mode": "hotkeys",
+    "bindings": {
+      "tilt_forward": "d",
+      "tilt_backward": "c",
+      "tilt_left": "b",
+      "tilt_right": "a",
+      "gesture_1": "shift",
+      "gesture_2": "shift"
+    }
   }
 }

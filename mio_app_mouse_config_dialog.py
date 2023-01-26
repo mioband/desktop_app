@@ -73,7 +73,7 @@ class Ui_MouseConfigDialog(object):
         self.MouseSensitivityLabel.setText(_translate("MouseConfigDialog", "Чувствительность"))
         self.MouseGestureActionComboBox.setItemText(0, _translate("MouseConfigDialog", "ЛКМ"))
         self.MouseGestureActionComboBox.setItemText(1, _translate("MouseConfigDialog", "ПКМ"))
-        self.MouseGestureLabel.setText(_translate("MouseConfigDialog", "Жест 1 (сжатый кулак)"))
+        self.MouseGestureLabel.setText(_translate("MouseConfigDialog", "Жест"))
         self.InvertMouseLabel.setText(_translate("MouseConfigDialog", "Инвертировать"))
         self.MouseConfigCancelButton.setText(_translate("MouseConfigDialog", "Отмена"))
         self.MouseConfigApplyButton.setText(_translate("MouseConfigDialog", "Применить"))
