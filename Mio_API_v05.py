@@ -12,6 +12,8 @@ import serial
 from constants import SERIAL_PORT, PATH_TO_DEFAULT_CONFIG
 from win32api import GetSystemMetrics
 
+from utils import Config, BandConfig
+
 MAX_MOUSE_SPEED = 40
 WIDTH_INCREASE = GetSystemMetrics(0) / GetSystemMetrics(1)
 HEIGHT_INCREASE = 1.5
@@ -295,6 +297,9 @@ class Mio_API_get_data(QRunnable):
         self.set_band_my_json_config(self.my_json_config)
         self.serial_port = self.json_config["usb_device"]["serial_port"]
         self.ser.port = self.serial_port
+
+    def connect_to_band(self, band_name, hand):
+        pass  # TODO
 
 
 if __name__ == '__main__':

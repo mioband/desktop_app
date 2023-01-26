@@ -25,6 +25,15 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.all_serial_ports = get_serial_ports()
 
+        # Initialize backend
+        # self.backend_controls = Mio_API_control()
+        # self.backend = Mio_API_get_data(self.backend_controls)
+        # self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
+        # self.backend.signals.band_status.connect(self.on_band_status_changed)
+        # self.threadpool = QThreadPool()
+        # print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+        # self.threadpool.start(self.backend)
+
         self.ui.UsbDeviceComportComboBox.clear()
         self.ui.UsbDeviceComportComboBox.addItems(self.all_serial_ports)
         self.config = Config(PATH_TO_DEFAULT_CONFIG)  # Load config
@@ -33,10 +42,12 @@ class MainWindow(QMainWindow):
         self.ui.LeftBandEnabled.toggled.connect(lambda: self.on_band_toggled("Left"))
         self.ui.LeftBandModeComboBox.currentIndexChanged.connect(self.on_band_mode_changed)
         self.ui.LeftBandConfigButton.clicked.connect(lambda: self.on_band_config_btn_clicked("Left"))
+        self.ui.LeftBandConnectButton.clicked.connect(lambda: self.connect_to_band("Left"))
 
         self.ui.RightBandEnabled.toggled.connect(lambda: self.on_band_toggled("Right"))
         self.ui.RightBandModeComboBox.currentIndexChanged.connect(self.on_band_mode_changed)
         self.ui.RightBandConfigButton.clicked.connect(lambda: self.on_band_config_btn_clicked("Right"))
+        self.ui.RightBandConnectButton.clicked.connect(lambda: self.connect_to_band("Right"))
 
         self.ui.LeftBandStatusIndicator.setStyleSheet("color: red;")
         self.ui.LeftBandStatusIndicator.setText('N/A')
@@ -52,7 +63,7 @@ class MainWindow(QMainWindow):
         self.keyboard_config_dialog = KeyboardConfigDialog(self)
 
         # Initialize backend
-        self.backend_controls = Mio_API_control()
+        # self.backend_controls = Mio_API_control()
         # self.backend = Mio_API_get_data(self.backend_controls)
         # self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
         # self.backend.signals.band_status.connect(self.on_band_status_changed)
@@ -204,11 +215,20 @@ class MainWindow(QMainWindow):
             self.ui.UsbDeviceComportComboBox.setCurrentIndex(0)
 
     def send_config_to_process(self):
+        self.backend.config = self.config
+        self.backend.config_changed = True
         print("PLACEHOLDER: SENDING CONFIG TO PROCESS")  # TODO
 
     def closeEvent(self, *args, **kwargs):
         self.backend.stop_requested = True
         self.backend_controls.stop_requested = True
+
+    def connect_to_band(self, hand):
+        if hand == "Left":
+            band_name = self.ui.LeftBandNameLineEdit.text()
+        elif hand == "Right":
+            band_name = self.ui.RightBandNameLineEdit.text()
+        self.backend.connect_to_band(band_name, hand)
 
 
 class MouseConfigDialog(QDialog):
