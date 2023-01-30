@@ -24,9 +24,11 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.all_serial_ports = get_serial_ports()
+        self.config = Config(PATH_TO_DEFAULT_CONFIG)  # Load config
 
         # Initialize backend
-        # self.backend_controls = Mio_API_control()
+        self.backend_controls = Mio_API_control()
+        self.backend_controls.config = self.config
         # self.backend = Mio_API_get_data(self.backend_controls)
         # self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
         # self.backend.signals.band_status.connect(self.on_band_status_changed)
@@ -36,7 +38,6 @@ class MainWindow(QMainWindow):
 
         self.ui.UsbDeviceComportComboBox.clear()
         self.ui.UsbDeviceComportComboBox.addItems(self.all_serial_ports)
-        self.config = Config(PATH_TO_DEFAULT_CONFIG)  # Load config
         self.fill_main_window()  # Fill main window according to config
 
         self.ui.LeftBandEnabled.toggled.connect(lambda: self.on_band_toggled("Left"))
@@ -228,7 +229,7 @@ class MainWindow(QMainWindow):
             band_name = self.ui.LeftBandNameLineEdit.text()
         elif hand == "Right":
             band_name = self.ui.RightBandNameLineEdit.text()
-        self.backend.connect_to_band(band_name, hand)
+        self.backend.connect_to_band(band_name, hand)  # TODO
 
 
 class MouseConfigDialog(QDialog):

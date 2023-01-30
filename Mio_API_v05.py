@@ -299,6 +299,13 @@ class Mio_API_get_data(QRunnable):
         self.ser.port = self.serial_port
 
     def connect_to_band(self, band_name, hand):
+        """
+        :param band_name:
+        :param hand:
+        :return:
+        1. Подключиться к браслету с именем
+        2. Записать его айдишник в атрибут config.<hand>_band.id
+        """
         pass  # TODO
 
 
