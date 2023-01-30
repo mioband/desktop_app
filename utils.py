@@ -1,6 +1,9 @@
 import sys
 import glob
 import json
+import serial
+
+
 
 
 class BandConfig(object):
@@ -8,7 +11,25 @@ class BandConfig(object):
     def __str__(self):
         return f"\nName: {self.name}\nID: {self.id}\nIs enabled: {self.enabled}\nMode: {self.mode}\nBindings: {self.bindings}"
 
-    def __init__(self, config_dict):
+    # def __init__(self, config_dict):
+    #     self.name = config_dict['name']
+    #     self.id = config_dict['id']
+    #     self.enabled = config_dict['enabled']
+    #     self.mode = config_dict['mode']
+    #     self.bindings = config_dict['bindings']
+    #     self.message = MessageConfig()#{'x': 0, 'y': 0, 's': 0}
+    #     self.power = 100#config_dict['power']
+
+    def __init__(self):
+        self.name = None
+        self.id = None
+        self.enabled = None
+        self.mode = None
+        self.bindings = None
+        self.message = {'x': 0, 'y': 0, 's': 0}
+        self.power = 100#config_dict['power']
+
+    def read(self, config_dict):
         self.name = config_dict['name']
         self.id = config_dict['id']
         self.enabled = config_dict['enabled']
@@ -37,8 +58,8 @@ class Config(object):
         self.config_dict = None
         self.available_bindings = None
         self.usb_device = None
-        self.left_band = None
-        self.right_band = None
+        self.left_band = BandConfig()
+        self.right_band = BandConfig()
         self.read(self.path)
 
     def read(self, path_to_config_file):
@@ -46,8 +67,8 @@ class Config(object):
             self.config_dict = json.load(json_file)
         self.available_bindings = self.config_dict['available_bindings']
         self.usb_device = self.config_dict['usb_device']
-        self.left_band = BandConfig(self.config_dict['left'])
-        self.right_band = BandConfig(self.config_dict['right'])
+        self.left_band.read(self.config_dict['left'])
+        self.right_band.read(self.config_dict['right'])
 
     def write(self, path_to_config_file):
         self.config_dict['available_bindings'] = self.available_bindings
@@ -59,6 +80,7 @@ class Config(object):
 
 
 def get_serial_ports():
+    # ports = [port for port, _, _ in sorted(serial.tools.list_ports.comports())]
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
@@ -73,5 +95,5 @@ def get_serial_ports():
 
 
 if __name__ == '__main__':
-    config = Config("D:\work\mioband\desktop_app\config\config.json")
+    config = Config("config\config.json")
     print(config)

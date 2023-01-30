@@ -38,7 +38,7 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM6"
+    "serial_port": "COM5"
   },
   "left": {
     "name": "Bracelet_1",
@@ -46,10 +46,10 @@
     "enabled": true,
     "mode": "hotkeys",
     "bindings": {
-      "tilt_forward": "b",
-      "tilt_backward": "a",
-      "tilt_left": "g",
-      "tilt_right": "h",
+      "tilt_forward": "w",
+      "tilt_backward": "s",
+      "tilt_left": "d",
+      "tilt_right": "e",
       "gesture_1": "mousewheel_down",
       "gesture_2": "shift"
     }
@@ -60,10 +60,10 @@
     "enabled": true,
     "mode": "hotkeys",
     "bindings": {
-      "tilt_forward": "d",
-      "tilt_backward": "c",
-      "tilt_left": "b",
-      "tilt_right": "a",
+      "tilt_forward": "a",
+      "tilt_backward": "z",
+      "tilt_left": "x",
+      "tilt_right": "c",
       "gesture_1": "shift",
       "gesture_2": "shift"
     }
