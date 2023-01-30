@@ -80,7 +80,7 @@ class Config(object):
 
 
 def get_serial_ports():
-    ports = [port for port, _, _ in sorted(serial.tools.list_ports.comports())]  #
+    # ports = [port for port, _, _ in sorted(serial.tools.list_ports.comports())]
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
