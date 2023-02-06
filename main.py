@@ -11,7 +11,7 @@ from mio_app_new import Ui_MainWindow
 from mio_app_mouse_config_dialog import Ui_MouseConfigDialog
 from mio_app_keyboard_config_dialog import Ui_KeyboardConfigDialog
 
-from Mio_API_v05 import Mio_API_get_data, Mio_API_control
+from mio_app_backend import Mio_API_get_data, Mio_API_control
 
 import json
 from constants import *
@@ -29,13 +29,12 @@ class MainWindow(QMainWindow):
         # Initialize backend
         self.backend_controls = Mio_API_control()
         self.backend_controls.config = self.config
-        # self.backend = Mio_API_get_data(self.backend_controls)
+        self.backend = Mio_API_get_data(self.backend_controls)
         # self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
         # self.backend.signals.band_status.connect(self.on_band_status_changed)
-        # self.threadpool = QThreadPool()
+        self.threadpool = QThreadPool()
         # print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        # self.threadpool.start(self.backend)
-
+        self.threadpool.start(self.backend)
         self.ui.UsbDeviceComportComboBox.clear()
         self.ui.UsbDeviceComportComboBox.addItems(self.all_serial_ports)
         self.fill_main_window()  # Fill main window according to config
