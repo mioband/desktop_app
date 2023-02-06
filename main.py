@@ -57,8 +57,9 @@ class MainWindow(QMainWindow):
         self.backend_controls = Mio_API_control()
         self.backend_controls.config = self.config
         self.backend = Mio_API_get_data(self.backend_controls)
-        # self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
-        # self.backend.signals.band_status.connect(self.on_band_status_changed)
+        self.backend.signals.usb_device_status.connect(self.on_usb_device_status_changed)
+        self.backend.signals.band_status.connect(self.on_band_status_changed)
+        self.backend.signals.battery_percent.connect(self.on_battery_percent_received)
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
         self.threadpool.start(self.backend)
@@ -176,6 +177,26 @@ class MainWindow(QMainWindow):
                 print('Right band status changed to False')
                 self.ui.RightBandStatusIndicator.setStyleSheet("color: red;")
                 self.ui.RightBandStatusIndicator.setText('N/A')
+
+    def on_battery_percent_received(self, battery):
+        value = battery['percent']
+        if battery['band'] == 'left':
+            print(f'Left band battery: {battery["percent"]}')
+            self.ui.LeftBandBatteryIndicator.setStyleSheet(f"color: {self._get_color_for_battery(value)};")
+            self.ui.LeftBandBatteryIndicator.setText(str(value))
+        if battery['band'] == 'right':
+            print(f'Right band battery: {battery["percent"]}')
+            self.ui.RightBandBatteryIndicator.setStyleSheet(f"color: {self._get_color_for_battery(value)};")
+            self.ui.RightBandBatteryIndicator.setText(str(value))
+
+    @staticmethod
+    def _get_color_for_battery(value):
+        if value <= 20:
+            return "red"
+        elif 20 < value < 70:
+            return "orange"
+        elif value >= 70:
+            return "green"
 
     def fill_main_window(self):
         # Left

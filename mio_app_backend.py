@@ -131,7 +131,7 @@ class MioAPISignals(QObject):
     band_status = pyqtSignal(dict)  # Сигнал о статусе USB устройства, отправляется при открытии или закрытии порта
     usb_device_status = pyqtSignal(bool)  # Сигнал о статусе браслета, отправляется при подключении или отключении
     connect_status = pyqtSignal(bool)  # Сигнал об успешности или неуспешности подключения браслета к ответке
-    battery_percent = pyqtSignal(int)  # Сигнал о заряде аккумулятора в процентах, отправляется значение
+    battery_percent = pyqtSignal(dict)  # Сигнал о заряде аккумулятора в процентах, отправляется значение
 
 
 class Mio_API_get_data(QRunnable):
