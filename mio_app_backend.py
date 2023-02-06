@@ -41,7 +41,7 @@ class Mio_API_control(Thread):
         self.pre_button_states = {'w': False, 'a': False, 's': False, 'd': False, 'e': False, 'shift': False,
                                   'ctrl': False, 'space': False, 'left_click': False, 'right_click': False,
                                   'z': False, 'x': False, 'c': False}
-        self.config = Config("config\config.json")
+        self.config = Config("config/config.json")
         self.stop_requested = False
 
     def run(self):
@@ -136,7 +136,7 @@ class MioAPISignals(QObject):
     battery_percent = pyqtSignal(int)  # Сигнал о заряде аккумулятора в процентах, отправляется значение
 
 
-class Mio_API_get_data(QRunnable):#QRunnable):
+class Mio_API_get_data(QRunnable):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
         self.config_changed = False
@@ -162,7 +162,7 @@ class Mio_API_get_data(QRunnable):#QRunnable):
     def open_serial(self):
         while not self.stop_requested:
             try:
-                self.check_config()
+                self.ser.port = self.band_control.config.usb_device['serial_port']
                 print('check conf')
                 print(f'Trying to open port {self.ser.port}')
                 self.ser.open()
@@ -171,7 +171,8 @@ class Mio_API_get_data(QRunnable):#QRunnable):
                 line = self.ser.readline()
                 print(f'Data: {line}')
                 while not self.stop_requested:
-                    self.check_config()
+                    # self.check_config()
+                    self.ser.port = self.band_control.config.usb_device['serial_port']
                     line = self.ser.readline()
                     print(f'Data: {line}')
                     try:
@@ -188,7 +189,7 @@ class Mio_API_get_data(QRunnable):#QRunnable):
     def check_config(self):
         if self.config_changed:  # Теперь проверка на то был ли изменен конфиг
             print('Config changed, obtaining config again')
-            self.band_control.config.read("config\config.json")
+            self.band_control.config.read("config/config.json")
             self.ser.port = self.band_control.config.usb_device['serial_port']
             self.config_changed = False  # ОБЯЗАТЕЛЬНО ПЕРЕКЛЮЧИТЬ ОБРАТНО!
 
