@@ -17,7 +17,7 @@ MAX_MOUSE_SPEED = 40
 WIDTH_INCREASE = 1.5
 HEIGHT_INCREASE = 1.5
 DIFF_INCREASE = 0.01
-XY_LIMIT = 300
+XY_LIMIT = 500
 
 
 class Mio_API_control(Thread):
@@ -32,6 +32,12 @@ class Mio_API_control(Thread):
         self.button_headers = {'w': 'w', 'a': 'a', 's': 's', 'd': 'd', 'e': 'e', 'shift': Key.shift,
                                         'ctrl': Key.ctrl, 'space': Key.space, 'z': 'z', 'x': 'x', 'c': 'c',
                                         'left_click': Button.left, 'right_click': Button.right}
+        self.button_headers = {'a': 'a', 'b': 'b', 'c': 'c', 'd': 'd', 'e': 'e', 'f': 'f', 'g': 'g', 'h': 'h', 'i': 'i',
+                               'j': 'j', 'k': 'k', 'l': 'l', 'm': 'm', 'n': 'n', 'o': 'o', 'p': 'p', 'q': 'q', 'r': 'r',
+                               's': 's', 't': 't', 'u': 'u', 'v': 'v', 'w': 'w', 'x': 'x', 'y': 'y', 'z': 'z',
+                               'shift': Key.shift, 'ctrl': Key.ctrl, 'space': Key.space,
+                               'left_click': Button.left, 'right_click': Button.right,
+                               }
         self.pre_button_states = {'w': False, 'a': False, 's': False, 'd': False, 'e': False, 'shift': False,
                                   'ctrl': False, 'space': False, 'left_click': False, 'right_click': False,
                                   'z': False, 'x': False, 'c': False}

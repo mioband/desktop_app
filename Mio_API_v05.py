@@ -31,11 +31,11 @@ class Mio_API_control(Thread):
         # self.button_mouse_headers = {'left_click': Button.left, 'right_click': Button.right}
         self.button_headers = {'w': 'w', 'a': 'a', 's': 's', 'd': 'd', 'e': 'e', 'shift': Key.shift,
                                         'ctrl': Key.ctrl, 'space': Key.space, 'z': 'z', 'x': 'x', 'c': 'c',
-                                        'left_click': Button.left, 'right_click': Button.right}
+                                        'left_click': Button.left, 'right_click': Button.right}#TODO
         self.pre_button_states = {'w': False, 'a': False, 's': False, 'd': False, 'e': False, 'shift': False,
                                   'ctrl': False, 'space': False, 'left_click': False, 'right_click': False,
                                   'z': False, 'x': False, 'c': False}
-        self.config = Config("config\config.json")
+        self.config = Config("config/config.json")
         self.stop_requested = False
 
     def run(self):
@@ -133,6 +133,7 @@ class MioAPISignals(QObject):
 class Mio_API_get_data(Thread):#QRunnable):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
+        self.need_writing = False
         self.config_changed = False
         self.stop_requested = False
         self.band_control = band_control
@@ -166,6 +167,7 @@ class Mio_API_get_data(Thread):#QRunnable):
                 print(f'Data: {line}')
                 while not self.stop_requested:
                     self.check_config()
+                    self.band_writing()
                     line = self.ser.readline()
                     print(f'Data: {line}')
                     try:
@@ -182,7 +184,7 @@ class Mio_API_get_data(Thread):#QRunnable):
     def check_config(self):
         if self.config_changed:  # Теперь проверка на то был ли изменен конфиг
             print('Config changed, obtaining config again')
-            self.band_control.config.read("config\config.json")
+            self.band_control.config.read("config/config.json")
             self.ser.port = self.band_control.config.usb_device['serial_port']
             self.config_changed = False  # ОБЯЗАТЕЛЬНО ПЕРЕКЛЮЧИТЬ ОБРАТНО!
 
@@ -254,18 +256,25 @@ class Mio_API_get_data(Thread):#QRunnable):
         return decode_message, band_n
 
     def connect_to_band(self, band_name, hand):
-        cmd = bytearray(('~' + 'G' + band_name).encode('utf-8'))
-        self.ser.write(cmd)
-        tmp = ''
-        while tmp != b'GOK\r\n':
-            tmp = self.ser.readline()
+        print('connect started')
+        self.cmd = bytearray(('~' + 'G' + band_name).encode('utf-8'))
+        self.tmp = b'GOK\r\n'
+        self.need_writing = True
         if hand == 'right':
             band_id = 0
             self.band_control.config.right_band.id = band_id
         elif hand == 'left':
             band_id = 1
             self.band_control.config.left_band.id = band_id
-        self.band_control.config.write()
+        self.band_control.config.write('config/config.json')
+
+    def band_writing(self):
+        if self.need_writing:
+            self.ser.write(self.cmd)
+            tmp = ''
+            while tmp != self.tmp:
+                print(tmp)
+                tmp = self.ser.readline()
 
     def emit_close(self):
         time_now = time.time()
@@ -279,7 +288,7 @@ if __name__ == '__main__':
     get_data = Mio_API_get_data(mio_control)
     get_data.start()
     time.sleep(3)
-    # get_data.connect_to_band('Bracelet_2', '')
+    get_data.connect_to_band('Bracelet_2', 'left')
 
 
 
