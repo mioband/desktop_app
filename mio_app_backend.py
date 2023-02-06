@@ -38,7 +38,7 @@ class Mio_API_control(Thread):
                                'shift': Key.shift, 'ctrl': Key.ctrl, 'space': Key.space,
                                'left_click': Button.left, 'right_click': Button.right,
                                }
-        self.pre_button_states = {k for k in self.button_headers}
+        self.pre_button_states = {k: False for k in self.button_headers}
         self.config = Config("config/config.json")
         self.stop_requested = False
 
