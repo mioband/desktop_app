@@ -38,7 +38,7 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "/dev/cu.usbmodem8178FF7417321"
+    "serial_port": "COM2"
   },
   "left": {
     "name": "Bracelet_1",
