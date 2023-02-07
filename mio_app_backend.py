@@ -214,6 +214,7 @@ class Mio_API_get_data(QRunnable):
             except:
                 pass
         if i_list[1] == 0:
+            self.last_left_emit = time.time()
             if i_list[0] == 48:
                 self.band_control.config.left_band.message['y'] = i_list[2]
                 self.band_control.config.left_band.message['x'] = i_list[3]
@@ -226,6 +227,7 @@ class Mio_API_get_data(QRunnable):
                 print(f'Заряд:{i_list[2]}%')
 
         else:
+            self.last_right_emit = time.time()
             if i_list[0] == 48:
                 self.band_control.config.right_band.message['y'] = i_list[2]
                 self.band_control.config.right_band.message['x'] = i_list[3]
