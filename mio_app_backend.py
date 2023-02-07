@@ -205,87 +205,36 @@ class Mio_API_get_data(QRunnable):
                 i_list.append(int(i))
             except:
                 pass
-        if i_list[0] == 48 or i_list[0] == 144 or i_list[0] == 80:
-            band_n = 0
-            self.last_left_emit = time.time()
-            if self.band_control.config.left_band.id == band_n:
-                if i_list[0] == 48:
-                    self.band_control.config.left_band.message['y'] = i_list[1]
-                    self.band_control.config.left_band.message['x'] = i_list[2]
-                elif i_list[0] == 144:
-                    print(i_list)
-                    self.band_control.config.left_band.message['s'] = \
-                        1 if i_list[1] > 3 else 0
-                elif i_list[0] == 80:
-                    self.band_control.config.left_band.power = i_list[1]
-                    percent = i_list[1]
-                    self.signals.battery_percent.emit({'band': 'right', 'status': percent})
-                    print(f'Заряд:{i_list[1]}%')
-                decode_message = \
-                    self.band_control.config.left_band.message
-            else:
-                if i_list[0] == 48:
-                    self.band_control.config.right_band.message['y'] = i_list[1]
-                    self.band_control.config.right_band.message['x'] = i_list[2]
-                elif i_list[0] == 144:
-                    print(i_list)
-                    self.band_control.config.right_band.message['s'] = \
-                        1 if i_list[1] > 3 else 0
-                elif i_list[0] == 80:
-                    self.band_control.config.right_band.power = i_list[1]
-                    percent = i_list[1]
-                    self.signals.battery_percent.emit({'band': 'right', 'status': percent})
-                    print(f'Заряд:{i_list[1]}%')
-                decode_message = \
-                    self.band_control.config.right_band.message
+        if i_list[1] == 0:
+            if i_list[0] == 48:
+                self.band_control.config.left_band.message['y'] = i_list[2]
+                self.band_control.config.left_band.message['x'] = i_list[3]
+            elif i_list[0] == 144:
+                print(i_list)
+                self.band_control.config.left_band.message['s'] = \
+                    1 if i_list[2] > 3 else 0
+            elif i_list[0] == 80:
+                self.band_control.config.left_band.power = i_list[2]
+                print(f'Заряд:{i_list[2]}%')
+
         else:
-            band_n = 1
-            self.last_right_emit = time.time()
-            if self.band_control.config.left_band.id == band_n:
-                if i_list[0] == 49:
-                    self.band_control.config.left_band.message['y'] = i_list[1]
-                    self.band_control.config.left_band.message['x'] = i_list[2]
-                elif i_list[0] == 145:
-                    print(i_list)
-                    self.band_control.config.left_band.message['s'] = \
-                        1 if i_list[1] > 3 else 0
-                elif i_list[0] == 81:
-                    self.band_control.config.left_band.power = i_list[1]
-                    percent = i_list[1]
-                    self.signals.battery_percent.emit({'band': 'right', 'status': percent})
-                    print(f'Заряд:{i_list[1]}%')
-                decode_message = \
-                    self.band_control.config.left_band.message
-            else:
-                if i_list[0] == 49:
-                    self.band_control.config.right_band.message['y'] = i_list[1]
-                    self.band_control.config.right_band.message['x'] = i_list[2]
-                elif i_list[0] == 145:
-                    print(i_list)
-                    self.band_control.config.right_band.message['s'] = \
-                        1 if i_list[1] > 3 else 0
-                elif i_list[0] == 81:
-                    self.band_control.config.right_band.power = i_list[1]
-                    percent = i_list[1]
-                    self.signals.battery_percent.emit({'band': 'right', 'status': percent})
-                    print(f'Заряд:{i_list[1]}%')
-                decode_message = \
-                    self.band_control.config.right_band.message
-        return decode_message, band_n
+            if i_list[0] == 48:
+                self.band_control.config.right_band.message['y'] = i_list[2]
+                self.band_control.config.right_band.message['x'] = i_list[3]
+            elif i_list[0] == 144:
+                print(i_list)
+                self.band_control.config.right_band.message['s'] = \
+                    1 if i_list[2] > 3 else 0
+            elif i_list[0] == 80:
+                self.band_control.config.right_band.power = i_list[2]
+                print(f'Заряд:{i_list[2]}%')
 
     def connect_to_band(self, band_name, hand):
-        cmd = bytearray(('~' + 'G' + band_name).encode('utf-8'))
+        cmd = bytearray(('~' + 'G' + band_name + '$' + hand).encode('utf-8'))
         self.ser.write(cmd)
         tmp = ''
         while tmp != b'GOK\r\n':
             tmp = self.ser.readline()
-        if hand == 'right':
-            band_id = 0
-            self.band_control.config.right_band.id = band_id
-        elif hand == 'left':
-            band_id = 1
-            self.band_control.config.left_band.id = band_id
-        self.band_control.config.write()
 
     def emit_close(self):
         time_now = time.time()
