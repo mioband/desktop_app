@@ -236,7 +236,7 @@ class Mio_API_get_data(QRunnable):
                 print(f'Заряд:{i_list[2]}%')
 
     def connect_to_band(self, band_name, hand):
-        self.cmd = bytearray(('~' + 'G' + band_name + '$' + hand).encode('utf-8'))
+        self.cmd = bytearray(('~' + 'G' + band_name + '$' + hand + '\n').encode('utf-8'))
         # print(self.cmd)
         self.need_write = True
 
