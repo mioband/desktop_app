@@ -223,10 +223,10 @@ class Mio_API_get_data(Thread):#QRunnable):
 
     def connect_to_band(self, band_name, hand):
         print('connect started')
-        self.cmd = bytearray(('~' + 'G' + band_name + '$' + hand).encode('utf-8'))
+        self.cmd = bytearray(('~' + 'G' + band_name).encode('utf-8'))
         self.tmp = b'GOK\r\n'
-
-
+        self.need_writing = True
+        self.band_control.config.write('config/config.json')
 
     def band_writing(self):
         if self.need_writing:
