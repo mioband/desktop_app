@@ -44,10 +44,14 @@
     "name": "Bracelet_1",
     "id": 1,
     "enabled": true,
-    "mode": "mouse",
+    "mode": "hotkeys",
     "bindings": {
-      "gesture_1": "z",
-      "gesture_2": "left_click"
+      "tilt_forward": "w",
+      "tilt_backward": "s",
+      "tilt_left": "a",
+      "tilt_right": "d",
+      "gesture_1": "y",
+      "gesture_2": "shift"
     }
   },
   "right": {

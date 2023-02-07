@@ -138,6 +138,7 @@ class Mio_API_get_data(QRunnable):
 # class Mio_API_get_data(Thread):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
+        self.need_write = False
         self.emit_time = int(time.time())
         self.config_changed = False
         self.stop_requested = False
@@ -175,6 +176,12 @@ class Mio_API_get_data(QRunnable):
                 while not self.stop_requested:
                     # self.check_config()
                     self.ser.port = self.band_control.config.usb_device['serial_port']
+                    if self.need_write:
+                        self.ser.write(self.cmd)
+                        tmp = ''
+                        while tmp != b'GOK\r\n':
+                            tmp = self.ser.readline()
+                        self.need_write = False
                     line = self.ser.readline()
                     # print(f'Data: {line}')
                     try:
@@ -231,14 +238,10 @@ class Mio_API_get_data(QRunnable):
                 print(f'Заряд:{i_list[2]}%')
 
     def connect_to_band(self, band_name, hand):
-        cmd = bytearray(('~' + 'G' + band_name + '$' + hand + '\n').encode('utf-8'))
+        self.cmd = bytearray(('~' + 'G' + band_name + '$' + hand + '\n').encode('utf-8'))
         print(f'Connecting to band {band_name} on hand {hand}:')
-        print(cmd)
-        self.ser.write(cmd)
-        tmp = ''
-        while tmp != b'GOK\r\n':
-            tmp = self.ser.readline()
-            print(tmp)
+        # print(self.cmd)
+        self.need_write = True
 
     def emit_close(self):
         time_now = time.time()
@@ -263,3 +266,4 @@ if __name__ == '__main__':
     get_data.start()
     time.sleep(3)
     get_data.connect_to_band('LARS_Bracelet', 'L')
+
