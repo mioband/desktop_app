@@ -183,7 +183,7 @@ class Mio_API_get_data(QRunnable):
                             tmp = self.ser.readline()
                         self.need_write = False
                     line = self.ser.readline()
-                    # print(f'Data: {line}')
+                    print(f'Data: {line}')
                     try:
                         self.serial_msg_read(line)
                         # print(self.band_control.config.right_band.message)
