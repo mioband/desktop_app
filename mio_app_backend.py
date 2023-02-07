@@ -165,7 +165,7 @@ class Mio_API_get_data(QRunnable):
             try:
                 self.ser.port = self.band_control.config.usb_device['serial_port']
                 print('check conf')
-                self.signals.usb_device_status.emit(False)
+                # self.signals.usb_device_status.emit(False)
                 print(f'Trying to open port {self.ser.port}')
                 self.ser.open()
                 print('Port opened')
@@ -193,6 +193,7 @@ class Mio_API_get_data(QRunnable):
                         self.emit_close()
             except:
                 time.sleep(3)
+                self.signals.usb_device_status.emit(False)
                 self.ser.close()
 
     def check_config(self):

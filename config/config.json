@@ -38,7 +38,7 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "/dev/tty.usbmodem8178D77417321"
+    "serial_port": "COM5"
   },
   "left": {
     "name": "Bracelet_1",
@@ -46,11 +46,11 @@
     "enabled": true,
     "mode": "hotkeys",
     "bindings": {
-      "tilt_forward": "j",
-      "tilt_backward": "s",
-      "tilt_left": "d",
-      "tilt_right": "e",
-      "gesture_1": "mousewheel_down",
+      "tilt_forward": "left_click",
+      "tilt_backward": "right_click",
+      "tilt_left": "a",
+      "tilt_right": "b",
+      "gesture_1": "c",
       "gesture_2": "shift"
     }
   },
@@ -60,11 +60,11 @@
     "enabled": true,
     "mode": "hotkeys",
     "bindings": {
-      "tilt_forward": "a",
-      "tilt_backward": "z",
-      "tilt_left": "x",
-      "tilt_right": "j",
-      "gesture_1": "shift",
+      "tilt_forward": "f",
+      "tilt_backward": "m",
+      "tilt_left": "q",
+      "tilt_right": "o",
+      "gesture_1": "j",
       "gesture_2": "shift"
     }
   }
