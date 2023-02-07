@@ -46,7 +46,7 @@
     "enabled": true,
     "mode": "hotkeys",
     "bindings": {
-      "tilt_forward": "w",
+      "tilt_forward": "j",
       "tilt_backward": "s",
       "tilt_left": "d",
       "tilt_right": "e",
@@ -63,7 +63,7 @@
       "tilt_forward": "a",
       "tilt_backward": "z",
       "tilt_left": "x",
-      "tilt_right": "c",
+      "tilt_right": "j",
       "gesture_1": "shift",
       "gesture_2": "shift"
     }
