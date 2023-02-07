@@ -220,7 +220,7 @@ class Mio_API_get_data(QRunnable):
             elif i_list[0] == 144:
                 print(i_list)
                 self.band_control.config.left_band.message['s'] = \
-                    1 if i_list[2] > 3 else 0
+                    1 if i_list[4] > 3 else 0
             elif i_list[0] == 80:
                 self.band_control.config.left_band.power = i_list[2]
                 print(f'Заряд:{i_list[2]}%')
@@ -233,7 +233,7 @@ class Mio_API_get_data(QRunnable):
             elif i_list[0] == 144:
                 print(i_list)
                 self.band_control.config.right_band.message['s'] = \
-                    1 if i_list[2] > 3 else 0
+                    1 if i_list[4] > 3 else 0
             elif i_list[0] == 80:
                 self.band_control.config.right_band.power = i_list[2]
                 print(f'Заряд:{i_list[2]}%')
