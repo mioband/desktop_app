@@ -135,6 +135,7 @@ class MioAPISignals(QObject):
 
 
 class Mio_API_get_data(QRunnable):
+# class Mio_API_get_data(Thread):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
         self.emit_time = int(time.time())
@@ -230,11 +231,14 @@ class Mio_API_get_data(QRunnable):
                 print(f'Заряд:{i_list[2]}%')
 
     def connect_to_band(self, band_name, hand):
-        cmd = bytearray(('~' + 'G' + band_name + '$' + hand).encode('utf-8'))
+        cmd = bytearray(('~' + 'G' + band_name + '$' + hand + '\n').encode('utf-8'))
+        print(f'Connecting to band {band_name} on hand {hand}:')
+        print(cmd)
         self.ser.write(cmd)
         tmp = ''
         while tmp != b'GOK\r\n':
             tmp = self.ser.readline()
+            print(tmp)
 
     def emit_close(self):
         time_now = time.time()
@@ -258,4 +262,4 @@ if __name__ == '__main__':
     get_data = Mio_API_get_data(mio_control)
     get_data.start()
     time.sleep(3)
-    # get_data.connect_to_band('Bracelet_2', '')
+    get_data.connect_to_band('LARS_Bracelet', 'L')

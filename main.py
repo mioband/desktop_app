@@ -238,8 +238,10 @@ class MainWindow(QMainWindow):
 
     def connect_to_band(self, hand):
         if hand == "Left":
+            hand = "L"
             band_name = self.ui.LeftBandNameLineEdit.text()
         elif hand == "Right":
+            hand = "R"
             band_name = self.ui.RightBandNameLineEdit.text()
         self.backend.connect_to_band(band_name, hand)  # TODO
 
