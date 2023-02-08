@@ -48,7 +48,7 @@ class Mio_API_control(Thread):
             self.controller_bands(self.config.right_band)
             # print(self.x_speed, self.y_speed)
             self.mouse.move(self.x_speed, self.y_speed)
-            # self.button_check(self.s, 'left_click')
+            # self.button_check(self.s, 'left_click')xxxxxxx
             time.sleep(self.duration)
         sys.exit()
 
@@ -102,6 +102,10 @@ class Mio_API_control(Thread):
                 else:  # BAND IS STRAIGHT (NOR FORWARD NOR BACKWARD)
                     self.release_button(band_side.bindings['tilt_forward'], band_side.mode)
                     self.release_button(band_side.bindings['tilt_backward'], band_side.mode)
+                if band_side.message['s'] == 1:
+                    self.press_button(band_side.bindings['gesture_1'], band_side.mode)
+                else:
+                    self.release_button(band_side.bindings['gesture_1'], band_side.mode)
 
     def release_button(self, button, mode):
         if mode == "mouse":
@@ -186,13 +190,15 @@ class Mio_API_get_data(QRunnable):
                     print(f'Data: {line}')
                     try:
                         self.serial_msg_read(line)
-                        # print(self.band_control.config.right_band.message)
-                        # self.json_data_with_config[str(band_id)] = json_message  # TODO
+                        print(self.band_control.config.right_band.message)
+                        # self.json_data_with_config[str(band_id)] = json_message  # TODOssdddwwwwwwwdwdwawww
                         # self.set_band_json_data(self.json_data_with_config)
                         self.emit_close()
                     except:
+                        print('message except')
                         self.emit_close()
             except:
+                self.emit_close()
                 time.sleep(3)
                 self.signals.usb_device_status.emit(False)
                 self.ser.close()
@@ -220,8 +226,9 @@ class Mio_API_get_data(QRunnable):
                 self.band_control.config.left_band.message['x'] = i_list[3]
             elif i_list[0] == 144:
                 print(i_list)
-                self.band_control.config.left_band.message['s'] = \
-                    1 if i_list[2] > 3 else 0
+                print(self.band_control.config.left_band.message['s'])
+                print(i_list[4])
+                self.band_control.config.right_band.message['s'] = i_list[4]
             elif i_list[0] == 80:
                 self.band_control.config.left_band.power = i_list[2]
                 print(f'Заряд:{i_list[2]}%')
@@ -233,8 +240,9 @@ class Mio_API_get_data(QRunnable):
                 self.band_control.config.right_band.message['x'] = i_list[3]
             elif i_list[0] == 144:
                 print(i_list)
-                self.band_control.config.right_band.message['s'] = \
-                    1 if i_list[2] > 3 else 0
+                print(i_list[4])
+                print(self.band_control.config.left_band.message['s'])
+                self.band_control.config.right_band.message['s'] = i_list[4]
             elif i_list[0] == 80:
                 self.band_control.config.right_band.power = i_list[2]
                 print(f'Заряд:{i_list[2]}%')
@@ -258,8 +266,7 @@ class Mio_API_get_data(QRunnable):
                 self.signals.band_status.emit({'band': 'left', 'status': False})
             else:
                 print('left status True')
-
-                self.signals.band_status.emit({'band': 'right', 'status': True})
+                self.signals.band_status.emit({'band': 'left', 'status': True})
 
 
 if __name__ == '__main__':
