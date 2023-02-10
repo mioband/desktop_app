@@ -110,11 +110,17 @@ class Mio_API_control(Thread):
     def release_button(self, button, mode):
         if mode == "mouse":
             if self.pre_button_states[button]:
-                self.mouse.release(self.button_headers[button])
+                try:
+                    self.mouse.release(self.button_headers[button])
+                except:
+                    self.keyboard.release(self.button_headers[button])
                 print(f'{button} released')
         elif mode == "hotkeys":
             if self.pre_button_states[button]:
-                self.keyboard.release(self.button_headers[button])
+                try:
+                    self.keyboard.release(self.button_headers[button])
+                except:
+                    self.mouse.release(self.button_headers[button])
                 print(f'{button} released')
 
         self.pre_button_states[button] = False
@@ -122,11 +128,17 @@ class Mio_API_control(Thread):
     def press_button(self, button, mode):
         if mode == "mouse":
             if not self.pre_button_states[button]:
-                self.mouse.press(self.button_headers[button])
+                try:
+                    self.mouse.press(self.button_headers[button])
+                except:
+                    self.keyboard.press(self.button_headers[button])
                 print(f'{button} pressed')
         elif mode == "hotkeys":
             if not self.pre_button_states[button]:
-                self.keyboard.press(self.button_headers[button])
+                try:
+                    self.mouse.press(self.button_headers[button])
+                except:
+                    self.keyboard.press(self.button_headers[button])
                 print(f'{button} pressed')
         self.pre_button_states[button] = True
 
@@ -139,7 +151,7 @@ class MioAPISignals(QObject):
 
 
 class Mio_API_get_data(QRunnable):
-# class Mio_API_get_data(Thread):
+    # class Mio_API_get_data(Thread):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
         self.need_write = False
@@ -275,4 +287,3 @@ if __name__ == '__main__':
     get_data.start()
     time.sleep(3)
     get_data.connect_to_band('LARS_Bracelet', 'L')
-
