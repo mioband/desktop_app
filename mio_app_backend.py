@@ -48,7 +48,7 @@ class Mio_API_control(Thread):
             self.controller_bands(self.config.right_band)
             # print(self.x_speed, self.y_speed)
             self.mouse.move(self.x_speed, self.y_speed)
-            # self.button_check(self.s, 'left_click')xxxxxxx
+            # self.button_check(self.s, 'left_click')
             time.sleep(self.duration)
         sys.exit()
 
@@ -150,8 +150,8 @@ class MioAPISignals(QObject):
     battery_percent = pyqtSignal(dict)  # Сигнал о заряде аккумулятора в процентах, отправляется значение
 
 
-class Mio_API_get_data(QRunnable):
-    # class Mio_API_get_data(Thread):
+# class Mio_API_get_data(QRunnable):
+class Mio_API_get_data(Thread):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
         self.need_write = False
@@ -202,7 +202,7 @@ class Mio_API_get_data(QRunnable):
                     print(f'Data: {line}')
                     try:
                         self.serial_msg_read(line)
-                        print(self.band_control.config.right_band.message)
+                        # print(self.band_control.config.right_band.message)
                         # self.json_data_with_config[str(band_id)] = json_message  # TODOssdddwwwwwwwdwdwawww
                         # self.set_band_json_data(self.json_data_with_config)
                         self.emit_close()
@@ -210,17 +210,18 @@ class Mio_API_get_data(QRunnable):
                         print('message except')
                         self.emit_close()
             except:
+                print('port except')
                 self.emit_close()
                 time.sleep(3)
                 self.signals.usb_device_status.emit(False)
                 self.ser.close()
 
-    def check_config(self):
-        if self.config_changed:  # Теперь проверка на то был ли изменен конфиг
-            print('Config changed, obtaining config again')
-            self.band_control.config.read("config/config.json")
-            self.ser.port = self.band_control.config.usb_device['serial_port']
-            self.config_changed = False  # ОБЯЗАТЕЛЬНО ПЕРЕКЛЮЧИТЬ ОБРАТНО!
+    # def check_config(self):
+    #     if self.config_changed:  # Теперь проверка на то был ли изменен конфиг
+    #         print('Config changed, obtaining config again')
+    #         self.band_control.config.read("config/config.json")
+    #         self.ser.port = self.band_control.config.usb_device['serial_port']
+    #         self.config_changed = False  # ОБЯЗАТЕЛЬНО ПЕРЕКЛЮЧИТЬ ОБРАТНО!
 
     def serial_msg_read(self, line):
         decode_line = line.decode()
@@ -237,10 +238,11 @@ class Mio_API_get_data(QRunnable):
                 self.band_control.config.left_band.message['y'] = i_list[2]
                 self.band_control.config.left_band.message['x'] = i_list[3]
             elif i_list[0] == 144:
+                print(line)
                 print(i_list)
                 print(self.band_control.config.left_band.message['s'])
                 print(i_list[4])
-                self.band_control.config.right_band.message['s'] = i_list[4]
+                self.band_control.config.left_band.message['s'] = i_list[4]
             elif i_list[0] == 80:
                 self.band_control.config.left_band.power = i_list[2]
                 print(f'Заряд:{i_list[2]}%')
@@ -253,7 +255,7 @@ class Mio_API_get_data(QRunnable):
             elif i_list[0] == 144:
                 print(i_list)
                 print(i_list[4])
-                print(self.band_control.config.left_band.message['s'])
+                print(self.band_control.config.right_band.message['s'])
                 self.band_control.config.right_band.message['s'] = i_list[4]
             elif i_list[0] == 80:
                 self.band_control.config.right_band.power = i_list[2]
@@ -284,6 +286,7 @@ class Mio_API_get_data(QRunnable):
 if __name__ == '__main__':
     mio_control = Mio_API_control()
     get_data = Mio_API_get_data(mio_control)
+    # print(get_data.band_control.config)
     get_data.start()
-    time.sleep(3)
-    get_data.connect_to_band('LARS_Bracelet', 'L')
+    # time.sleep(3)
+    # get_data.connect_to_band('LARS_Bracelet', 'L')

@@ -43,25 +43,29 @@
   "left": {
     "name": "Bracelet_1",
     "id": 1,
-    "enabled": false,
+    "enabled": true,
     "mode": "hotkeys",
     "bindings": {
-      "tilt_forward": "w",
-      "tilt_backward": "s",
-      "tilt_left": "a",
-      "tilt_right": "d",
-      "gesture_1": "left_click",
+      "tilt_forward": "u",
+      "tilt_backward": "j",
+      "tilt_left": "h",
+      "tilt_right": "k",
+      "gesture_1": "q",
       "gesture_2": "shift"
     }
   },
   "right": {
     "name": "Bracelet_2",
     "id": "3",
-    "enabled": true,
-    "mode": "mouse",
+    "enabled": false,
+    "mode": "hotkeys",
     "bindings": {
-      "gesture_1": "left_click",
-      "gesture_2": "left_click"
+      "tilt_forward": "p",
+      "tilt_backward": "l",
+      "tilt_left": "e",
+      "tilt_right": "g",
+      "gesture_1": "space",
+      "gesture_2": "shift"
     }
   }
 }
