@@ -38,7 +38,7 @@
   ],
   "usb_device": {
     "mode": "app",
-    "serial_port": "COM7"
+    "serial_port": "COM5"
   },
   "left": {
     "name": "Bracelet_1",
@@ -57,14 +57,14 @@
   "right": {
     "name": "Bracelet_2",
     "id": "3",
-    "enabled": false,
+    "enabled": true,
     "mode": "hotkeys",
     "bindings": {
       "tilt_forward": "p",
       "tilt_backward": "l",
       "tilt_left": "e",
       "tilt_right": "g",
-      "gesture_1": "space",
+      "gesture_1": "x",
       "gesture_2": "shift"
     }
   }

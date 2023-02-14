@@ -150,8 +150,8 @@ class MioAPISignals(QObject):
     battery_percent = pyqtSignal(dict)  # Сигнал о заряде аккумулятора в процентах, отправляется значение
 
 
-# class Mio_API_get_data(QRunnable):
-class Mio_API_get_data(Thread):
+class Mio_API_get_data(QRunnable):
+# class Mio_API_get_data(Thread):
     def __init__(self, band_control=None):
         super(Mio_API_get_data, self).__init__()
         self.need_write = False
